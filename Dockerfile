@@ -19,6 +19,14 @@ RUN if [ -n "$OPENCLAW_DOCKER_APT_PACKAGES" ]; then \
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY ui/package.json ./ui/package.json
 COPY patches ./patches
+
+# === 新增的部分开始 ===
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends python3 make g++ build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+# === 新增的部分结束 ===
+
 COPY scripts ./scripts
 
 RUN pnpm install
